@@ -1,0 +1,32 @@
+package com.app.swappy.feature_account.presentation.sign_up.components
+
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import com.app.swappy.R
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UsernameField(
+    usernameValue: String,
+    onUsernameChange: (String) -> Unit,
+    isUsernameValid: Boolean,
+) {
+    TextFieldWithValidation(
+        value = usernameValue,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Ascii,
+            imeAction = ImeAction.Next
+        ),
+        onValueChange = { username ->
+            onUsernameChange(username)
+        },
+        label = R.string.login_label,
+        placeholder = R.string.login_placeholder,
+        isValid = isUsernameValid,
+        invalidText = stringResource(id = R.string.username_invalid),
+    )
+}

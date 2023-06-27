@@ -1,0 +1,49 @@
+package com.app.swappy.feature_chat.data.repository
+
+import com.app.swappy.feature_chat.data.remote.ChatApi
+import com.app.swappy.feature_chat.data.remote.request.GetOrCreatePrivateRoomRequest
+import com.app.swappy.feature_chat.data.remote.request.SendMessageRequest
+import com.app.swappy.feature_chat.domain.model.ChatRoom
+import com.app.swappy.feature_chat.domain.model.Message
+import com.app.swappy.feature_chat.domain.repository.ChatRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
+
+class ChatRepositoryImpl @Inject constructor(
+    private val chatApi: ChatApi
+) : ChatRepository {
+    override suspend fun getMessagesByRoom(authKey: String, chatRoomId: Int): List<Message> =
+        withContext(Dispatchers.IO) {
+            chatApi.getMessages(authKey = authKey, chatRoomId = chatRoomId)
+        }
+
+    override suspend fun getMyRooms(authKey: String): List<ChatRoom> =
+        withContext(Dispatchers.IO) {
+            chatApi.getRooms(authKey = authKey)
+        }
+
+    override suspend fun getOrCreatePrivateRoom(
+        authKey: String,
+        companionId: Int
+    ): ChatRoom =
+        withContext(Dispatchers.IO) {
+            chatApi.getOrCreatePrivateRoom(
+                authKey = authKey,
+                request = GetOrCreatePrivateRoomRequest(
+                    companionId = companionId
+                )
+            )
+        }
+
+    override suspend fun sendMessage(authKey: String, chatRoomId: Int, text: String) =
+        withContext(Dispatchers.IO) {
+            chatApi.sendMessage(
+                authKey = authKey,
+                request = SendMessageRequest(
+                    text = text,
+                    room = chatRoomId,
+                )
+            )
+        }
+}
